@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using RegistrationAPI.Validation;
 
 namespace RegistrationAPI.ViewModels;
 
@@ -18,6 +19,9 @@ public class UserModel
     public int? CityId { get; set; }
     public string? ResultMessage { get; set; } = null;
     public long? Id { get; set; }
+
+    [RequiredTrue(ErrorMessage="User must agree with requirements")]
+    public bool? Agree { get; set; }
 }
 
 public class PasswordsGroup

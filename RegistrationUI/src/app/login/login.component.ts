@@ -45,6 +45,9 @@ export class LoginComponent implements OnInit {
   get secondStep(): boolean {
     return this.step === RegistrationStepModel.Second;
   }
+ get finished(): boolean {
+    return this.step === RegistrationStepModel.Finish;
+ }
 
   get countries(): CountryModel[] {
     return this._countries;
@@ -87,6 +90,7 @@ export class LoginComponent implements OnInit {
       .subscribe(message => {
         this.resultMessage.msg = message.resultMessage||'';
         this.resultMessage.id = message.id||0;
+        this.step = RegistrationStepModel.Finish;
       });
   }
 
