@@ -1,0 +1,85 @@
+
+<div class="container">
+  <div *ngIf="errorMessage" class="bg-danger">{{errorMessage}}</div>
+  <div *ngIf="!secondStep">
+  <div class="bg-info p-2">Step 1</div>
+  <form class="m-2" novalidate [formGroup]="userFormGroupFirst" (ngSubmit)="toSecondStep()">
+    <div class="form-group">
+      <label>Email</label>
+      <input class="form-control" formControlName="email">
+      <span class="error"
+            [hidden]="userFormGroupFirst.controls['email'].pristine || !userFormGroupFirst.hasError('required', 'email')">Email is required</span>
+      <span class="error"
+            [hidden]="userFormGroupFirst.controls['email'].pristine || !userFormGroupFirst.hasError('email', 'email')">Incorrect Email</span>
+    </div>
+
+    <div class="form-group" formGroupName="passwordsGroup">
+      <div class="form-group">
+       <label>Password</label>
+        <input class="form-control" formControlName="password">
+        <span class="error"
+              [hidden]="userFormGroupFirst.get(['passwordsGroup', 'password'])?.pristine || !userFormGroupFirst.hasError('required',['passwordsGroup', 'password'])">
+Password is required</span>
+        <span class="error"
+              [hidden]="!userFormGroupFirst.hasError('pattern',['passwordsGroup', 'password'])">
+Password must contain minimum 1 letter and minimum 1 digit</span>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input class="form-control" formControlName="confirmPassword">
+        <span class="error"
+              [hidden]="userFormGroupFirst.get(['passwordsGroup', 'confirmPassword'])?.pristine || !userFormGroupFirst.hasError('equals', 'passwordsGroup')">
+Passwords must be the same</span>
+      </div>
+    </div>
+    <div style="height: 60px"></div>
+    <div class="form-group">
+      <label>Agree</label>
+      <input type="checkbox" formControlName="agree" class="form-check">
+      <span class="error" [hidden]="userFormGroupFirst.controls['agree'].pristine || !userFormGroupFirst.hasError('required', 'agree')">
+        Must agree
+      </span>
+    </div>
+     <button class="btn btn-primary" [disabled]="userFormGroupFirst.invalid" type="submit">Next</button>
+   </form>
+  </div>
+
+  <div *ngIf="secondStep && countries">
+    <div class="bg-info p-2">Step 2</div>
+    <form [formGroup]="userFormGroupSecond" novalidate (ngSubmit)="registerUser()">
+      <div class="form-control">
+        <label>Country</label>
+        <select formControlName="countryId" (change)="loadCities($event.target)" class="form-select">
+          <option value="0">Select a Country</option>
+          <option *ngFor="let c of countries" [value]="c.countryId">{{c.countryName}}</option>
+        </select>
+      </div>
+
+      <div class="form-control">
+        <label>Cities</label>
+        <select formControlName="cityId" class="form-select">
+          <option value="0">Select a Province</option>
+          <option *ngFor="let c of cities" [value]="c.cityId">{{c.cityName}}</option>
+        </select>
+      </div>
+      <button type="submit" [disabled]="userFormGroupSecond.invalid" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+  <div>
+
+  </div>
+  <div class="text-white-50 bg-success" *ngIf="resultMessage && resultMessage.id" >
+       {{resultMessage.msg}}
+    <br>
+    <br>
+    <a class="btn btn-secondary" (click)="fetchUser(resultMessage.id)">Fetch registered user</a>
+    <div claas="bg-info" *ngIf="user">
+      <table class="table table-bordered table-striped">
+        <tr><th>Email</th><td>{{user.email}}</td></tr>
+        <tr><th>Id</th><td>{{resultMessage.id}}</td></tr>
+        <tr><th>Country</th><td>{{user.countryName}}</td></tr>
+        <tr><th>Province</th><td>{{user.cityName}}</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
